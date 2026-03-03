@@ -1,1 +1,3 @@
-export class CreateAlunoDto {}
+export class CreateAlunoDto {
+    usuarioID: string;
+}
