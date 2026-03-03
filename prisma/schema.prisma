@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Cargo {
+  Aluno
+  Professor
+  Dev 
+  Administrador
+}
+
+enum StatusAluno {
+  Ativo
+  Inativo
+}
+
+enum Instrumento {
+  Flauta
+  Sax
+  Teclado
+  Violao
+  Baixo
+}
+
+enum StatusFrequencia {
+  Presente
+  Ausente
+  Justificado
+}
+
+enum TipoPagamento {
+  Pix
+  Cartao
+  Dinheiro
+}
+
+enum StatusPagamento {
+  Pendente
+  Pago
+  Atrasado
+}
+
+enum TipoHistorico {
+  Cadastro
+  Matricula
+  Pagamento
+  Aviso
+  MudancaTurma
+}
+
+model Usuario {
+  id String @id @default(uuid())
+  nome String 
+  email String @unique
+  senha String
+  cargo Cargo
+
+  aluno Aluno?
+
+  dataCriacao DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+}
+
+model Aluno {
+  alunoID String @id @default(uuid())
+  usuarioID String @unique
+  usuario Usuario @relation(fields: [usuarioID], references: [id])
+
+  matriculas Matricula[]
+  pagamentos Pagamento[]
+  historicos HistoricoAluno[]
+
+  dataCriacao DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+}
+
+model Frequencia {
+  id Int @id @default(autoincrement())
+
+  matriculaID Int
+  matricula Matricula @relation(fields: [matriculaID], references: [id])
+
+  dataAula DateTime
+  status StatusFrequencia
+
+  observacao String?
+
+  dataCriacao DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+}
+
+model Turma {
+  turmaID Int @id @default(autoincrement())
+  turma String
+  instrumento Instrumento
+  dia String 
+  horario String
+  
+  matriculas Matricula[]
+
+  dataCriacao DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+}
+
+model Matricula {
+  id Int @id @default(autoincrement())
+
+  alunoID String
+  aluno Aluno @relation(fields: [alunoID], references: [alunoID])
+
+  turmaID Int
+  turma Turma @relation(fields: [turmaID], references: [turmaID])
+
+  statusMatricula StatusAluno
+  Frequencias Frequencia[]
+
+  dataMatricula DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+}
+
+model Pagamento {
+  id Int @id @default(autoincrement())
+
+  alunoID String
+  aluno Aluno @relation(fields: [alunoID], references: [alunoID])
+
+  valor Float
+  tipoPagamento TipoPagamento
+  statusPagamento StatusPagamento
+
+  dataCriacao DateTime @default(now())
+  dataAtualizacao DateTime @updatedAt
+}
+
+model HistoricoAluno {
+  id Int @id @default(autoincrement())
+
+  alunoID String
+  aluno Aluno @relation(fields: [alunoID], references: [alunoID])
+
+  tipoHistorico TipoHistorico
+  descricao String
+
+  dataCriacao DateTime @default(now())
+}
