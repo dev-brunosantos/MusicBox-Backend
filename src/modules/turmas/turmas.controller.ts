@@ -22,6 +22,11 @@ export class TurmasController {
     return this.turmasService.findOne(+id);
   }
 
+  @Get('turma/:turma')
+  findByName(@Param('turma') turma: string) {
+    return this.turmasService.findByName(turma);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTurmaDto: UpdateTurmaDto) {
     return this.turmasService.update(+id, updateTurmaDto);
