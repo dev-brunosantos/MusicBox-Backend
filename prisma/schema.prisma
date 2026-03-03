@@ -97,7 +97,7 @@ model Frequencia {
 
 model Turma {
   turmaID Int @id @default(autoincrement())
-  turma String
+  turma String @unique
   instrumento Instrumento
   dia String 
   horario String

@@ -8,11 +8,11 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/Usuario.js'
-export type * from './models/Aluno.js'
-export type * from './models/Frequencia.js'
-export type * from './models/Turma.js'
-export type * from './models/Matricula.js'
-export type * from './models/Pagamento.js'
-export type * from './models/HistoricoAluno.js'
-export type * from './commonInputTypes.js'
+export type * from './models/Usuario'
+export type * from './models/Aluno'
+export type * from './models/Frequencia'
+export type * from './models/Turma'
+export type * from './models/Matricula'
+export type * from './models/Pagamento'
+export type * from './models/HistoricoAluno'
+export type * from './commonInputTypes'

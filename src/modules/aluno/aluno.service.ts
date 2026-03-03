@@ -1,26 +1,102 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
+import { DbService } from 'src/db/db.service';
+import { MatriculaService } from '../matricula/matricula.service';
+import { TurmasService } from '../turmas/turmas.service';
 
 @Injectable()
 export class AlunoService {
-  create(createAlunoDto: CreateAlunoDto) {
-    return 'This action adds a new aluno';
+
+  constructor(
+    private prisma: DbService,
+    private turmaService: TurmasService,
+    private matriculaService: MatriculaService
+  ) { }
+
+  public async create(createAlunoDto: CreateAlunoDto) {
+    try {
+
+      if (!createAlunoDto.usuarioID) {
+        throw new HttpException('O campo usuarioID é obrigatório.', HttpStatus.BAD_REQUEST);
+      }
+
+      // Verifica se a turma informada existe
+      const turmaExistente = await this.turmaService.findByName(createAlunoDto.turma);
+
+      if (!turmaExistente) {
+        throw new HttpException('Turma não encontrada.', HttpStatus.NOT_FOUND);
+      }
+
+      // Criação da matricula
+      // const novaMatricula = await this.matriculaService.create({
+      //   alunoID: '1234', // Será atualizado posteriormente com o ID do aluno criado
+      //   turmaID: turmaExistente.turmaID,
+      //   statusMatricula: 'Ativo'
+      // })
+
+      // Criação do novo aluno
+      const novoAluno = await this.prisma.aluno.create({
+        data: {
+          usuarioID: createAlunoDto.usuarioID,
+          // matriculas: {
+          //   connect: { id: novaMatricula.id }
+          // }
+          matriculas: {
+            create: {
+              turmaID: turmaExistente.turmaID,
+              statusMatricula: 'Ativo'
+            }
+          }
+        }
+      })
+
+      // Atualiza a matrícula com o ID do aluno criado
+      // await this.matriculaService.update(
+      //   novaMatricula.id, { alunoID: novoAluno.alunoID }
+      // );
+      
+
+      return novoAluno;
+    } catch (error) {
+
+      console.error(error);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
+      throw new HttpException('Erro interno do sistema.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  findAll() {
-    return `This action returns all aluno`;
+  public async findAll() {
+    const alunos = await this.prisma.aluno.findMany();
+
+    if (!alunos || alunos.length === 0) {
+      throw new HttpException('Nenhum aluno encontrado.', HttpStatus.NOT_FOUND);
+    }
+
+    return alunos;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} aluno`;
+  public async findOne(id: string) {
+    const aluno = await this.prisma.aluno.findUnique({
+      where: { alunoID: id }
+    })
+
+    if(!aluno) {
+      throw new HttpException('Aluno não encontrado.', HttpStatus.NOT_FOUND);
+    }
+    
+    return aluno;
   }
 
-  update(id: number, updateAlunoDto: UpdateAlunoDto) {
+  update(id: string, updateAlunoDto: UpdateAlunoDto) {
     return `This action updates a #${id} aluno`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} aluno`;
   }
 }
