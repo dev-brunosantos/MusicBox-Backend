@@ -5,7 +5,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(private readonly usuarioService: UsuarioService) { }
 
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
@@ -19,7 +19,7 @@ export class UsuarioController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usuarioService.findOne(+id);
+    return this.usuarioService.findOne(id);
   }
 
   @Patch(':id')
