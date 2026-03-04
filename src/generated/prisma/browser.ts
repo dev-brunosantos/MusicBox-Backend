@@ -48,6 +48,11 @@ export type Matricula = Prisma.MatriculaModel
  */
 export type Pagamento = Prisma.PagamentoModel
 /**
+ * Model HistoricoUsuario
+ * 
+ */
+export type HistoricoUsuario = Prisma.HistoricoUsuarioModel
+/**
  * Model HistoricoAluno
  * 
  */

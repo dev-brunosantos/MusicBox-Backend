@@ -400,10 +400,6 @@ export type HistoricoAlunoUncheckedUpdateManyWithoutAlunoNestedInput = {
   deleteMany?: Prisma.HistoricoAlunoScalarWhereInput | Prisma.HistoricoAlunoScalarWhereInput[]
 }
 
-export type EnumTipoHistoricoFieldUpdateOperationsInput = {
-  set?: $Enums.TipoHistorico
-}
-
 export type HistoricoAlunoCreateWithoutAlunoInput = {
   tipoHistorico: $Enums.TipoHistorico
   descricao: string

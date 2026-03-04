@@ -57,6 +57,7 @@ export const ModelName = {
   Turma: 'Turma',
   Matricula: 'Matricula',
   Pagamento: 'Pagamento',
+  HistoricoUsuario: 'HistoricoUsuario',
   HistoricoAluno: 'HistoricoAluno'
 } as const
 
@@ -145,6 +146,17 @@ export const PagamentoScalarFieldEnum = {
 } as const
 
 export type PagamentoScalarFieldEnum = (typeof PagamentoScalarFieldEnum)[keyof typeof PagamentoScalarFieldEnum]
+
+
+export const HistoricoUsuarioScalarFieldEnum = {
+  id: 'id',
+  usuarioID: 'usuarioID',
+  tipoHistorico: 'tipoHistorico',
+  descricao: 'descricao',
+  dataCriacao: 'dataCriacao'
+} as const
+
+export type HistoricoUsuarioScalarFieldEnum = (typeof HistoricoUsuarioScalarFieldEnum)[keyof typeof HistoricoUsuarioScalarFieldEnum]
 
 
 export const HistoricoAlunoScalarFieldEnum = {

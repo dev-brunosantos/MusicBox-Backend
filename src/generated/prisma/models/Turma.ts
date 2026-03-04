@@ -248,17 +248,17 @@ export type TurmaOrderByWithRelationInput = {
 
 export type TurmaWhereUniqueInput = Prisma.AtLeast<{
   turmaID?: number
+  turma?: string
   AND?: Prisma.TurmaWhereInput | Prisma.TurmaWhereInput[]
   OR?: Prisma.TurmaWhereInput[]
   NOT?: Prisma.TurmaWhereInput | Prisma.TurmaWhereInput[]
-  turma?: Prisma.StringFilter<"Turma"> | string
   instrumento?: Prisma.EnumInstrumentoFilter<"Turma"> | $Enums.Instrumento
   dia?: Prisma.StringFilter<"Turma"> | string
   horario?: Prisma.StringFilter<"Turma"> | string
   dataCriacao?: Prisma.DateTimeFilter<"Turma"> | Date | string
   dataAtualizacao?: Prisma.DateTimeFilter<"Turma"> | Date | string
   matriculas?: Prisma.MatriculaListRelationFilter
-}, "turmaID">
+}, "turmaID" | "turma">
 
 export type TurmaOrderByWithAggregationInput = {
   turmaID?: Prisma.SortOrder

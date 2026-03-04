@@ -390,6 +390,7 @@ export const ModelName = {
   Turma: 'Turma',
   Matricula: 'Matricula',
   Pagamento: 'Pagamento',
+  HistoricoUsuario: 'HistoricoUsuario',
   HistoricoAluno: 'HistoricoAluno'
 } as const
 
@@ -406,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "usuario" | "aluno" | "frequencia" | "turma" | "matricula" | "pagamento" | "historicoAluno"
+    modelProps: "usuario" | "aluno" | "frequencia" | "turma" | "matricula" | "pagamento" | "historicoUsuario" | "historicoAluno"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -854,6 +855,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HistoricoUsuario: {
+      payload: Prisma.$HistoricoUsuarioPayload<ExtArgs>
+      fields: Prisma.HistoricoUsuarioFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HistoricoUsuarioFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HistoricoUsuarioFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>
+        }
+        findFirst: {
+          args: Prisma.HistoricoUsuarioFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HistoricoUsuarioFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>
+        }
+        findMany: {
+          args: Prisma.HistoricoUsuarioFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>[]
+        }
+        create: {
+          args: Prisma.HistoricoUsuarioCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>
+        }
+        createMany: {
+          args: Prisma.HistoricoUsuarioCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HistoricoUsuarioCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>[]
+        }
+        delete: {
+          args: Prisma.HistoricoUsuarioDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>
+        }
+        update: {
+          args: Prisma.HistoricoUsuarioUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>
+        }
+        deleteMany: {
+          args: Prisma.HistoricoUsuarioDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HistoricoUsuarioUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HistoricoUsuarioUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>[]
+        }
+        upsert: {
+          args: Prisma.HistoricoUsuarioUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HistoricoUsuarioPayload>
+        }
+        aggregate: {
+          args: Prisma.HistoricoUsuarioAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHistoricoUsuario>
+        }
+        groupBy: {
+          args: Prisma.HistoricoUsuarioGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HistoricoUsuarioGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HistoricoUsuarioCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HistoricoUsuarioCountAggregateOutputType> | number
+        }
+      }
+    }
     HistoricoAluno: {
       payload: Prisma.$HistoricoAlunoPayload<ExtArgs>
       fields: Prisma.HistoricoAlunoFieldRefs
@@ -1036,6 +1111,17 @@ export const PagamentoScalarFieldEnum = {
 } as const
 
 export type PagamentoScalarFieldEnum = (typeof PagamentoScalarFieldEnum)[keyof typeof PagamentoScalarFieldEnum]
+
+
+export const HistoricoUsuarioScalarFieldEnum = {
+  id: 'id',
+  usuarioID: 'usuarioID',
+  tipoHistorico: 'tipoHistorico',
+  descricao: 'descricao',
+  dataCriacao: 'dataCriacao'
+} as const
+
+export type HistoricoUsuarioScalarFieldEnum = (typeof HistoricoUsuarioScalarFieldEnum)[keyof typeof HistoricoUsuarioScalarFieldEnum]
 
 
 export const HistoricoAlunoScalarFieldEnum = {
@@ -1248,6 +1334,7 @@ export type GlobalOmitConfig = {
   turma?: Prisma.TurmaOmit
   matricula?: Prisma.MatriculaOmit
   pagamento?: Prisma.PagamentoOmit
+  historicoUsuario?: Prisma.HistoricoUsuarioOmit
   historicoAluno?: Prisma.HistoricoAlunoOmit
 }
 

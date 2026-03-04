@@ -63,6 +63,8 @@ model Usuario {
 
   aluno Aluno?
 
+  historicos HistoricoUsuario[]
+
   dataCriacao DateTime @default(now())
   dataAtualizacao DateTime @updatedAt
 }
@@ -136,6 +138,18 @@ model Pagamento {
 
   dataCriacao DateTime @default(now())
   dataAtualizacao DateTime @updatedAt
+}
+
+model HistoricoUsuario {
+  id Int @id @default(autoincrement())
+
+  usuarioID String
+  usuario Usuario @relation(fields: [usuarioID], references: [id])
+
+  tipoHistorico TipoHistorico
+  descricao String
+
+  dataCriacao DateTime @default(now())
 }
 
 model HistoricoAluno {
