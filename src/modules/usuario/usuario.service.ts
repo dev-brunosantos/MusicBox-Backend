@@ -4,12 +4,14 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { DbService } from 'src/db/db.service';
 import { hash } from "bcrypt";
 import { AlunoService } from '../aluno/aluno.service';
+import { HistoricoService } from '../historico/historico.service';
 
 @Injectable()
 export class UsuarioService {
 
   constructor(
     private prisma: DbService,
+    private historicoService: HistoricoService,
     private alunoService: AlunoService
   ) { }
 
@@ -112,6 +114,13 @@ export class UsuarioService {
         await this.alunoService.create(createAlunoDto);
       }
 
+      // Criação do informações do historico do usuário
+      await this.historicoService.createHistoricoUsuario({
+        usuarioID: novoUsuario.id,
+        tipoHistorico: 'Cadastro',
+        descricao: `Usuário ${novoUsuario.nome} criado com o cargo de ${novoUsuario.cargo}.`
+      });
+
       return {
         novoUsuario,
         message: 'Usuário criado com sucesso.'
@@ -130,6 +139,7 @@ export class UsuarioService {
   }
 
   public async findAll() {
+
     const usuarios = await this.prisma.usuario.findMany({
       select: {
         id: true,
@@ -152,10 +162,29 @@ export class UsuarioService {
   }
 
   public async findOne(id: string) {
-    return `This action returns a #${id} usuario`;
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        cargo: true,
+        aluno: {
+          select: {
+            alunoID: true
+          }
+        }
+      }
+    })
+
+    if (!usuario) {
+      throw new HttpException('Usuário não encontrado.', HttpStatus.NOT_FOUND);
+    }
+
+    return usuario;
   }
 
-  public async findByEmail(email: string) {
+  private async findByEmail(email: string) {
     return await this.prisma.usuario.findUnique({
       where: { email }
     })

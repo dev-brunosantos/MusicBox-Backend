@@ -4,12 +4,14 @@ import { UpdateAlunoDto } from './dto/update-aluno.dto';
 import { DbService } from 'src/db/db.service';
 import { MatriculaService } from '../matricula/matricula.service';
 import { TurmasService } from '../turmas/turmas.service';
+import { HistoricoService } from '../historico/historico.service';
 
 @Injectable()
 export class AlunoService {
 
   constructor(
     private prisma: DbService,
+    private readonly historicoService: HistoricoService,
     private turmaService: TurmasService,
     private matriculaService: MatriculaService
   ) { }
@@ -48,6 +50,35 @@ export class AlunoService {
               statusMatricula: 'Ativo'
             }
           }
+        },
+        select: {
+          alunoID: true,
+          usuario: {
+            select: {
+              nome: true,
+            }
+          },
+          matriculas: {
+            select: {
+              id: true,
+              turma: {
+                select: {
+                  turma: true,
+                  instrumento: true,
+                  dia: true,
+                  horario: true
+                }
+              },
+              statusMatricula: true,
+              Frequencias: {
+                select: {
+                  observacao: true,
+                  status: true,
+                  dataAula: true
+                }
+              }
+            },
+          },
         }
       })
 
@@ -55,7 +86,14 @@ export class AlunoService {
       // await this.matriculaService.update(
       //   novaMatricula.id, { alunoID: novoAluno.alunoID }
       // );
-      
+
+      // Criação do informações do historico do aluno
+      await this.historicoService.create({
+        alunoID: novoAluno.alunoID,
+        tipoHistorico: 'Cadastro',
+        descricao: `Aluno ${novoAluno.usuario.nome} matriculado na turma ${turmaExistente.turma}.`
+      })
+
 
       return novoAluno;
     } catch (error) {
@@ -71,24 +109,95 @@ export class AlunoService {
   }
 
   public async findAll() {
-    const alunos = await this.prisma.aluno.findMany();
+    const alunos = await this.prisma.aluno.findMany({
+      select: {
+        alunoID: true,
+        usuario: {
+          select: {
+            nome: true,
+          }
+        },
+        matriculas: {
+          select: {
+            id: true,
+            turma: {
+              select: {
+                turma: true,
+                instrumento: true,
+                dia: true,
+                horario: true
+              }
+            },
+            statusMatricula: true,
+            Frequencias: {
+              select: {
+                observacao: true,
+                status: true,
+                dataAula: true
+              }
+            }
+          },
+        },
+      }
+    });
 
     if (!alunos || alunos.length === 0) {
       throw new HttpException('Nenhum aluno encontrado.', HttpStatus.NOT_FOUND);
     }
 
-    return alunos;
+    return alunos.map(aluno => ({
+      alunoID: aluno.alunoID,
+      nome: aluno.usuario.nome,
+      matriculas: aluno.matriculas.map(matricula => ({
+        id: matricula.id,
+        turma: matricula.turma.turma,
+        instrumento: matricula.turma.instrumento,
+        dia: matricula.turma.dia,
+        horario: matricula.turma.horario,
+        statusMatricula: matricula.statusMatricula,
+        Frequencias: matricula.Frequencias
+      }))
+    }));
   }
 
   public async findOne(id: string) {
     const aluno = await this.prisma.aluno.findUnique({
-      where: { alunoID: id }
+      where: { alunoID: id },
+      select: {
+        alunoID: true,
+        usuario: {
+          select: {
+            nome: true,
+          }
+        },
+        matriculas: {
+          select: {
+            id: true,
+            turma: {
+              select: {
+                turma: true,
+                instrumento: true,
+                dia: true,
+                horario: true
+              }
+            },
+            statusMatricula: true,
+            Frequencias: {
+              select: {
+                observacao: true,
+                status: true,
+                dataAula: true
+              }
+            }
+          },
+        },
+      }
     })
 
-    if(!aluno) {
+    if (!aluno) {
       throw new HttpException('Aluno não encontrado.', HttpStatus.NOT_FOUND);
     }
-    
+
     return aluno;
   }
 

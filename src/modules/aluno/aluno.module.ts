@@ -4,9 +4,15 @@ import { AlunoController } from './aluno.controller';
 import { DbModule } from 'src/db/db.module';
 import { MatriculaModule } from '../matricula/matricula.module';
 import { TurmasModule } from '../turmas/turmas.module';
+import { HistoricoModule } from '../historico/historico.module';
 
 @Module({
-  imports: [DbModule, MatriculaModule, TurmasModule],
+  imports: [
+    DbModule,
+    HistoricoModule, 
+    MatriculaModule, 
+    TurmasModule
+  ],
   controllers: [AlunoController],
   providers: [AlunoService],
   exports: [AlunoService],
