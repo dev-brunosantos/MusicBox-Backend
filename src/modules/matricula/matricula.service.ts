@@ -3,6 +3,38 @@ import { CreateMatriculaDto } from './dto/create-matricula.dto';
 import { UpdateMatriculaDto } from './dto/update-matricula.dto';
 import { DbService } from 'src/db/db.service';
 
+const selectMatriculaID = {
+  id: true,
+  alunoID: true,
+  aluno: {
+    select: {
+      usuario: {
+        select: {
+          nome: true,
+        }
+      }
+    }
+  },
+  turmaID: true,
+  turma: {
+    select: {
+      turma: true,
+      instrumento: true,
+      dia: true,
+      horario: true
+    }
+  },
+  statusMatricula: true,
+  Frequencias: {
+    select: {
+      id: true,
+      status: true,
+      observacao: true,
+      dataAula: true
+    }
+  }
+}
+
 @Injectable()
 export class MatriculaService {
 
@@ -53,20 +85,48 @@ export class MatriculaService {
   }
 
   public async findAll() {
-    const matriculas = await this.prisma.matricula.findMany();
-    return matriculas;
+    const matriculas = await this.prisma.matricula.findMany({
+      select: selectMatriculaID
+    });
+
+    return matriculas.map(matricula => ({
+      id: matricula.id,
+      alunoID: matricula.alunoID,
+      alunoNome: matricula.aluno.usuario.nome,
+      turmaID: matricula.turmaID,
+      turma: matricula.turma.turma,
+      instrumento: matricula.turma.instrumento,
+      dia: matricula.turma.dia,
+      horario: matricula.turma.horario,
+      statusMatricula: matricula.statusMatricula,
+      Frequencias: matricula.Frequencias
+    }));
   }
 
   public async findOne(id: number) {
     const matriculaID = await this.prisma.matricula.findUnique({
-      where: { id }
+      where: { id },
+      select: selectMatriculaID
     })
 
     if (!matriculaID) {
       throw new HttpException('Matrícula não encontrada.', HttpStatus.NOT_FOUND);
     }
 
-    return matriculaID;
+    const matriculaCompleta = {
+      "id": matriculaID.id,
+      "alunoID": matriculaID.alunoID,
+      "alunoNome": matriculaID.aluno.usuario.nome,
+      "turmaID": matriculaID.turmaID,
+      "turma": matriculaID.turma.turma,
+      "instrumento": matriculaID.turma.instrumento,
+      "dia": matriculaID.turma.dia,
+      "horario": matriculaID.turma.horario,
+      "statusMatricula": matriculaID.statusMatricula,
+      "Frequencias": matriculaID.Frequencias
+    }
+
+    return matriculaCompleta;
   }
 
   public async update(id: number, updateMatriculaDto: UpdateMatriculaDto) {
