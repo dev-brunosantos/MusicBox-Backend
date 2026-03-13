@@ -191,6 +191,14 @@ export class AlunoService {
             }
           },
         },
+        pagamentos: {
+          select: {
+            valor: true,
+            tipoPagamento: true,
+            statusPagamento: true,
+            dataCriacao: true
+          }
+        }
       }
     })
 
